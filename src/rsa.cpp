@@ -25,14 +25,26 @@ std::unique_ptr<KeyContext> RSA::keygen() {
     context->q = dist(rand);
     octet eps = eps_dist(rand);
 
-    while (
-        !util::is_prime(context->p) || 
-        !util::is_prime(context->q) || 
-        util::diff(context->p, context->q) > eps) 
-    {
+    while (!util::is_prime(context->p)) {
         context->p = dist(rand);
+    }
+
+    regenerate_component:
+    while (!util::is_prime(context->q)) {
         context->q = dist(rand);
     }
+
+    if (util::diff(context->p, context->q) < eps) {
+        goto regenerate_component;
+    }
+
+    context->n = context->p * context->q;
+    context->lambda_n = util::lcm(context->p - 1, context->q - 1);
+
+    // effective and secure enough choice
+    context->e = 0x1 << 16 | 1;
+
+    context->d = util::inverse(context->e, context->lambda_n);
 
     return std::move(context);
 }

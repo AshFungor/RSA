@@ -1,10 +1,12 @@
 #pragma once
 
+#include <vector>
 #include <cstdint>
 #include <utility>
 
 using octet = std::uint64_t;
 using octet_string = char[9]; 
+using plaintext = std::vector<std::uint16_t>;
 
 // keys
 class PubKeyPair {
