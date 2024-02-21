@@ -52,14 +52,14 @@ std::unique_ptr<KeyContext> RSA::keygen() {
 std::pair<PubKeyPair, PrKey> RSA::generate_key_pair() {
     auto context = keygen();
     PubKeyPair pubKey {context->e, context->n};
-    PrKey prKey {context->d, context->e};
+    PrKey prKey {context->d, context->n};
     return {pubKey, prKey};
 }
 
-std::uint16_t RSA::cipher(const octet& block, const PubKeyPair& key) {
+octet RSA::cipher(const octet& block, const PubKeyPair& key) {
     return util::binary_pow_mod(block, key.e(), key.n());
 }
 
-std::uint16_t RSA::decipher(const octet& block, const PrKey& key) {
+octet RSA::decipher(const octet& block, const PrKey& key) {
     return util::binary_pow_mod(block, key.d(), key.n());
 }
