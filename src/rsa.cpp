@@ -17,7 +17,7 @@ std::unique_ptr<KeyContext> RSA::keygen() {
     };
 
     // distribution for key values (must be big enough)
-    std::uniform_int_distribution<octet> dist (0x0000FFFF0000ULL, ~0x0ULL);
+    std::uniform_int_distribution<octet> dist (0xF000ULL, 0xFFFFFFFF);
     std::uniform_int_distribution<octet> eps_dist (0xFF, 0xFFF);
     std::mt19937 rand {ss};
 
@@ -47,4 +47,19 @@ std::unique_ptr<KeyContext> RSA::keygen() {
     context->d = util::inverse(context->e, context->lambda_n);
 
     return std::move(context);
+}
+
+std::pair<PubKeyPair, PrKey> RSA::generate_key_pair() {
+    auto context = keygen();
+    PubKeyPair pubKey {context->e, context->n};
+    PrKey prKey {context->d, context->e};
+    return {pubKey, prKey};
+}
+
+std::uint16_t RSA::cipher(const octet& block, const PubKeyPair& key) {
+    return util::binary_pow_mod(block, key.e(), key.n());
+}
+
+std::uint16_t RSA::decipher(const octet& block, const PrKey& key) {
+    return util::binary_pow_mod(block, key.d(), key.n());
 }

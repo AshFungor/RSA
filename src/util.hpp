@@ -16,4 +16,5 @@ namespace util {
     octet lcm(const octet& first, const octet& second);
     // find inverse by mod
     octet inverse(const octet& base, const octet& mod);
+    octet gcd(octet a, octet b, long long& x, long long& y);
 }

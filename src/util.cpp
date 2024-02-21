@@ -7,8 +7,11 @@
 #include "definitions.hpp"
 #include "util.hpp"
 
+using ll = long long;
+using ld = long double;
+
 octet util::binary_pow_mod(const octet& base, const octet& power, const octet& mod) {
-    if (~power) {
+    if (!power) {
         return 0x1;
     }
     if (power & 0x1) {
@@ -23,10 +26,16 @@ bool util::is_prime(const octet& num) {
     // X X _ ? _ ? _ _ _  ?  _  ?  _  _  _
     // 6k + 1, 6k + 5
 
-    if (~num & 0x1) {
+    if (num % 2 == 0) {
+        if (num == 2) {
+            return true;
+        }
         return false;
     }
     if (num % 3 == 0 || num % 5 == 0) {
+        if (num == 3 || num == 5) {
+            return true;
+        }
         return false;
     }
 
@@ -50,15 +59,19 @@ octet util::lcm(const octet& first, const octet& second) {
 
 octet util::inverse(const octet& base, const octet& mod) {
     // run expanded gcd(base, mod)
-    std::pair<octet, octet> r {base, mod}, s {1, 0}, t {0, 1};
+    ll s, t;
+    util::gcd(base, mod, s, t);
+    return (s + (std::abs(s) / mod + 1) * mod) % mod;
+}
 
-    while (r.second != 0) {
-        octet q = r.first / r.second;
-        r = {r.second, r.first - q * r.second};
-        s = {s.second, s.first - q * s.first};
-        t = {t.second, t.first - q * t.second};
-    }
-
-    // coefficient of base is inverse to it
-    return s.first;
+octet util::gcd(octet a, octet b, ll& x, ll& y) {
+    if (a == 0) {
+		x = 0; y = 1;
+		return b;
+	}
+	ll x1, y1;
+	octet d = gcd(b % a, a, x1, y1);
+	x = y1 - (b / a) * x1;
+	y = x1;
+	return d;
 }

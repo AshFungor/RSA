@@ -12,20 +12,22 @@ using plaintext = std::vector<std::uint16_t>;
 class PubKeyPair {
 public:
     // keygen routine
-    inline PubKeyPair(octet p, octet q) : p_(p), q_(q) {}
-    inline const octet& p() { return p_; }
-    inline const octet& q() { return q_; }
+    inline PubKeyPair(octet e, octet n) : e_(e), n_(n) {}
+    inline const octet& e() const { return e_; }
+    inline const octet& n() const { return n_; }
 private:
-    octet p_;
-    octet q_;
+    octet e_;
+    octet n_;
 };
 
 class PrKey {
 public:
-    inline PrKey(octet d) : d_(d) {}
-    inline const octet& d() { return d_; }
+    inline PrKey(octet d, octet n) : d_(d), n_(n) {}
+    inline const octet& d() const { return d_; }
+    inline const octet& n() const { return n_; }
 private:
     octet d_;
+    octet n_;
 };
 
 struct KeyContext {
