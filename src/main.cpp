@@ -10,15 +10,24 @@
 #include "definitions.hpp"
 #include "rsa.hpp"
 
-void process_file(const std::string& file, const std::string& outfile, std::function<octet(octet)> process) {
+void process_file(const std::string& file, const std::string& outfile, std::function<octet(octet)> process, bool cipher = true) {
     std::ifstream ifs {file, std::ios::binary | std::ios::in};
     std::ofstream ofs {outfile, std::ios::binary | std::ios::out};
 
     octet block;
+
+    octet blockIn, blockOut;
+    if (cipher) {
+        blockIn = 2; blockOut = 8;
+    } else {
+        blockIn = 8; blockOut = 2;
+    }
+
     while (ifs.peek() != EOF) {
-        ifs.read(reinterpret_cast<char*>(&block), 8);
+        block = 0;
+        ifs.read(reinterpret_cast<char*>(&block), blockIn);
         block = process(block);
-        ofs.write(reinterpret_cast<char*>(&block), 8);
+        ofs.write(reinterpret_cast<char*>(&block), blockOut);
     }
 }
 
@@ -34,7 +43,7 @@ int main() {
         PubKeyPair key {e, n};
         std::string file;
         std::cout << "Enter filename with plaintext: "; std::cin >> file;
-        process_file(file, "out.bin", [&key](octet in) { return RSA::cipher(in, key); });
+        process_file(file, "out.bin", [&key](octet in) { return RSA::cipher(in, key); }, true);
         std::cout << "Ciphertext ready: out.bin\n";
         return 0;
     } 
@@ -45,7 +54,7 @@ int main() {
         PrKey key {d, n};
         std::string file;
         std::cout << "Enter filename with ciphertext: "; std::cin >> file;
-        process_file(file, "out.txt", [&key](octet in) { return RSA::decipher(in, key); });
+        process_file(file, "out.txt", [&key](octet in) { return RSA::decipher(in, key); }, false);
         std::cout << "Plaintext ready: out.txt\n";
         return 0;
     }
