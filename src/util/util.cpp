@@ -2,6 +2,8 @@
 #include <numeric>
 #include <cmath>
 #include <utility>
+#include <ios>
+#include <fstream>
 
 // local
 #include "definitions.hpp"
@@ -74,4 +76,24 @@ octet util::gcd(octet a, octet b, ll& x, ll& y) {
 	x = y1 - (b / a) * x1;
 	y = x1;
 	return d;
+}
+
+void util::process_file(
+    const std::string& file, 
+    const std::string& outfile, 
+    std::function<octet(octet)> process, 
+    std::size_t blockIn, 
+    std::size_t blockOut) 
+{
+    std::ifstream ifs {file, std::ios::binary | std::ios::in};
+    std::ofstream ofs {outfile, std::ios::binary | std::ios::out};
+
+    octet block;
+
+    while (ifs.peek() != EOF) {
+        block = 0;
+        ifs.read(reinterpret_cast<char*>(&block), blockIn);
+        block = process(block);
+        ofs.write(reinterpret_cast<char*>(&block), blockOut);
+    }
 }

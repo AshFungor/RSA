@@ -11,3 +11,4 @@ find_package(GTest REQUIRED VERSION 1.14.0)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(src)
+add_subdirectory(attacks)

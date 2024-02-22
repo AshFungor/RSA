@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <functional>
+
 #include "definitions.hpp"
 
 namespace util {
@@ -17,4 +20,10 @@ namespace util {
     // find inverse by mod
     octet inverse(const octet& base, const octet& mod);
     octet gcd(octet a, octet b, long long& x, long long& y);
+    // file IO
+    void process_file(const std::string& file, 
+                      const std::string& outfile, 
+                      std::function<octet(octet)> process, 
+                      std::size_t blockIn = 8,
+                      std::size_t blockOut = 8);
 }
