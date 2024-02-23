@@ -30,7 +30,7 @@ int main() {
     // Now we can decipher another cipher text obtained from initial
     util::process_file("modified.bin", "result.txt", [&prKey, &inv_r](octet in) { 
         return RSA::decipher(in, prKey) * inv_r % prKey.n(); 
-    }, 8, 8);
+    }, 8, 2);
 
     return 0;
 }
