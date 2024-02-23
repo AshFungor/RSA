@@ -3,6 +3,7 @@
 #include <fstream>
 #include <functional>
 #include <ios>
+#include <cmath>
 #include <iostream>
 #include <string>
 
@@ -20,10 +21,10 @@ int main() {
         octet e, n;
         std::cout << "Enter public exponent (e): "; std::cin >> e;
         std::cout << "Enter modulo (n): "; std::cin >> n;
-        PubKeyPair key {e, n};
+        PubKey key {e, n};
         std::string file;
         std::cout << "Enter filename with plaintext: "; std::cin >> file;
-        util::process_file(file, "out.bin", [&key](octet in) { return RSA::cipher(in, key); }, 2, 8);
+        util::process_file(file, "out.bin", [&key](octet in) { return RSA::cipher(in, key); }, std::floor(std::log2(key.n()) / 8), 8);
         std::cout << "Ciphertext ready: out.bin\n";
         return 0;
     } 
@@ -34,7 +35,7 @@ int main() {
         PrKey key {d, n};
         std::string file;
         std::cout << "Enter filename with ciphertext: "; std::cin >> file;
-        util::process_file(file, "out.txt", [&key](octet in) { return RSA::decipher(in, key); }, 8, 2);
+        util::process_file(file, "out.txt", [&key](octet in) { return RSA::decipher(in, key); }, 8, std::floor(std::log2(key.n()) / 8));
         std::cout << "Plaintext ready: out.txt\n";
         return 0;
     }

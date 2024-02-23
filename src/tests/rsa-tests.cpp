@@ -10,7 +10,7 @@
 #include "rsa.hpp"
 
 TEST(RSATest, CipherChunkTest) {
-    PubKeyPair key {17, 3233};
+    PubKey key {17, 3233};
     ASSERT_EQ(RSA::cipher(65, key), 2790);
 }
 

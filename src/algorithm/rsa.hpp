@@ -11,7 +11,7 @@
 namespace RSA {
 
     std::unique_ptr<KeyContext> keygen();
-    std::pair<PubKeyPair, PrKey> generate_key_pair();
-    octet cipher(const octet& block, const PubKeyPair& key);
+    std::pair<PubKey, PrKey> generate_key_pair();
+    octet cipher(const octet& block, const PubKey& key);
     octet decipher(const octet& block, const PrKey& key);
 }

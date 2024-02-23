@@ -49,14 +49,14 @@ std::unique_ptr<KeyContext> RSA::keygen() {
     return std::move(context);
 }
 
-std::pair<PubKeyPair, PrKey> RSA::generate_key_pair() {
+std::pair<PubKey, PrKey> RSA::generate_key_pair() {
     auto context = keygen();
-    PubKeyPair pubKey {context->e, context->n};
+    PubKey pubKey {context->e, context->n};
     PrKey prKey {context->d, context->n};
     return {pubKey, prKey};
 }
 
-octet RSA::cipher(const octet& block, const PubKeyPair& key) {
+octet RSA::cipher(const octet& block, const PubKey& key) {
     return util::binary_pow_mod(block % key.n(), key.e(), key.n());
 }
 

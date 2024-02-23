@@ -14,7 +14,7 @@
 int main() {
     // Generate key pair for initial scenario
     auto keys = RSA::generate_key_pair();
-    PubKeyPair pubKey {keys.first};
+    PubKey pubKey {keys.first};
     PrKey prKey {keys.second};
 
     util::process_file("plaintext.txt", "target.bin", [&pubKey](octet in) { 

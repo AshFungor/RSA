@@ -9,10 +9,10 @@ using octet_string = char[9];
 using plaintext = std::vector<std::uint16_t>;
 
 // keys
-class PubKeyPair {
+class PubKey {
 public:
     // keygen routine
-    inline PubKeyPair(octet e, octet n) : e_(e), n_(n) {}
+    inline PubKey(octet e, octet n) : e_(e), n_(n) {}
     inline const octet& e() const { return e_; }
     inline const octet& n() const { return n_; }
 private:
